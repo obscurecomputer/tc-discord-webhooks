@@ -13,67 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.github.playerforcehd.tcdiscordwebhooks.discord.embeds;
+package computer.obscure.tcdiscordwebhooks.discord.embeds
 
 /**
- * Fields that can be added to an {@link DiscordEmbed}
+ * Fields that can be added to an [DiscordEmbed]
  * to display embedded text
- *
+ * 
  * @author Pascal Zarrad
  */
-public class DiscordEmbedField {
-
+class DiscordEmbedField {
     /**
      * The name of the embed field
      */
-    private String name;
+    var name: String? = null
 
     /**
      * The value of the embed field
      */
-    private String value;
+    var value: String? = null
 
     /**
      * Decides whether the field should be displayed inline or not
      */
-    private boolean inline;
+    var isInline: Boolean = false
 
-    public DiscordEmbedField(String name, String value) {
-        this.name = name;
-        this.value = value;
+    constructor(name: String?, value: String?) {
+        this.name = name
+        this.value = value
     }
 
-    public DiscordEmbedField(String name, String value, boolean inline) {
-        this.name = name;
-        this.value = value;
-        this.inline = inline;
+    constructor(name: String?, value: String?, inline: Boolean) {
+        this.name = name
+        this.value = value
+        this.isInline = inline
     }
 
-    public DiscordEmbedField() {
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public boolean isInline() {
-        return inline;
-    }
-
-    public void setInline(boolean inline) {
-        this.inline = inline;
-    }
+    constructor()
 }

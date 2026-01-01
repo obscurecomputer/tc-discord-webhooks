@@ -13,36 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.github.playerforcehd.tcdiscordwebhooks.discord.embeds;
+package computer.obscure.tcdiscordwebhooks.discord.embeds
 
 /**
- * An image element for a {@link DiscordEmbed}.
+ * An image element for a [DiscordEmbed].
  * This image element provides only the url attribute, due to
  * the fact that Discord's WebHooks do not support any of the other
  * attributes.
- *
+ * 
  * @author Pascal Zarrad
  */
-public class DiscordEmbedImage {
-
+class DiscordEmbedImage {
     /**
      * The url of the image to use
      */
-    private String url;
+    var url: String? = null
 
-    public DiscordEmbedImage(String url) {
-        this.url = url;
+    constructor(url: String?) {
+        this.url = url
     }
 
-    public DiscordEmbedImage() {
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
+    constructor()
 }

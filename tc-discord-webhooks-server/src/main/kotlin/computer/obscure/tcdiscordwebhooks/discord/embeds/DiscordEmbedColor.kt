@@ -13,57 +13,57 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.github.playerforcehd.tcdiscordwebhooks.discord.embeds;
+package computer.obscure.tcdiscordwebhooks.discord.embeds
 
 /**
  * Provides the basic colors that can be used for embeds.
  * The values of the colors are their decimal value.
- * <p>
+ * 
+ * 
  * Also this class provides a method to get the decimal value of a
- *
+ * 
  * @author Pascal Zarrad
  */
-public class DiscordEmbedColor {
-
+object DiscordEmbedColor {
     /**
      * Red color
      */
-    public static final int RED = 16711680;
+    const val RED: Int = 16711680
 
     /**
      * Blue color
      */
-    public static final int BLUE = 26367;
+    const val BLUE: Int = 26367
 
     /**
      * Green color
      */
-    public static final int GREEN = 510208;
+    const val GREEN: Int = 510208
 
     /**
      * Yellow color
      */
-    public static final int YELLOW = 15924992;
+    const val YELLOW: Int = 15924992
 
     /**
      * Orange color
      */
-    public static final int ORANGE = 16746496;
+    const val ORANGE: Int = 16746496
 
     /**
      * Converts a hexadecimal color code to a decimal color code.
      * This method supports hexadecimal strings as parameter with and without a leading #.
-     *
+     * 
      * @param hexCode The hexadecimal color code to convert to a decimal value
      * @return The decimal value
      */
-    public static int convertHexToDecColor(String hexCode) throws NumberFormatException {
+    @Throws(NumberFormatException::class)
+    fun convertHexToDecColor(hexCode: String): Int {
         if (hexCode.startsWith("#")) {
-            String pureHex = hexCode.substring(1);
-            return Integer.parseInt(pureHex, 16);
+            val pureHex: String = hexCode.substring(1)
+            return pureHex.toInt(16)
         } else {
-            return Integer.parseInt(hexCode, 16);
+            return hexCode.toInt(16)
         }
     }
 }

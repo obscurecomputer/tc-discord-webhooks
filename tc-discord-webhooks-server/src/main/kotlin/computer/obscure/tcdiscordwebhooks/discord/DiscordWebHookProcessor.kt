@@ -13,107 +13,102 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package computer.obscure.tcdiscordwebhooks.discord
 
-package com.github.playerforcehd.tcdiscordwebhooks.discord;
-
-import com.google.gson.Gson;
-import org.apache.http.HttpHost;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
+import com.google.gson.Gson
+import org.apache.http.HttpHost
+import org.apache.http.client.config.RequestConfig
+import org.apache.http.client.methods.HttpPost
+import org.apache.http.entity.StringEntity
+import org.apache.http.impl.client.HttpClients
+import java.io.IOException
+import java.net.URISyntaxException
+import java.net.URL
+import java.nio.charset.StandardCharsets
 
 /**
  * Handles the communication between the Discord WebHook API and the TeamCity server.
  * Also handles the serialization of the Discord WebHook Payloads
- *
+ * 
  * @author Pascal Zarrad
  */
-public class DiscordWebHookProcessor {
-
+class DiscordWebHookProcessor {
     /**
-     * The charset used for the requests
+     * The GSON instance used to serialize the [DiscordWebHookPayload]'s
      */
-    private static final String HTTP_CHARSET = StandardCharsets.UTF_8.toString();
+    val gSON: Gson
 
-    /**
-     * The GSON instance used to serialize the {@link DiscordWebHookPayload}'s
-     */
-    private final Gson GSON;
-
-    public DiscordWebHookProcessor() {
-        this.GSON = new Gson();
+    init {
+        this.gSON = Gson()
     }
 
     /**
      * Send a WebHook request to the Discord API.
-     * This method accepts a {@link DiscordWebHookPayload} as argument and serialises it before sending it.
-     *
+     * This method accepts a [DiscordWebHookPayload] as argument and serialises it before sending it.
+     * 
      * @param webHookURL            The URL of the WebHook that is targeted
      * @param discordWebHookPayload The payload which contains the content to send
      * @return true if the request succeeded
      * @throws IOException        Thrown when any I/O operation fails
      * @throws URISyntaxException Thrown when the given #webHookURL is invalid
-     * @see DiscordWebHookProcessor#sendDiscordWebHook(String, String)
+     * @see DiscordWebHookProcessor.sendDiscordWebHook
      */
-    public boolean sendDiscordWebHook(String webHookURL, DiscordWebHookPayload discordWebHookPayload) throws IOException, URISyntaxException {
-        return this.sendDiscordWebHook(webHookURL, this.serializeDiscordWebHookPayload(discordWebHookPayload));
+    @Throws(IOException::class, URISyntaxException::class)
+    fun sendDiscordWebHook(webHookURL: String, discordWebHookPayload: DiscordWebHookPayload?): Boolean {
+        return this.sendDiscordWebHook(webHookURL, this.serializeDiscordWebHookPayload(discordWebHookPayload)!!)
     }
 
     /**
      * Send a WebHook request to the Discord API
-     *
+     * 
      * @param webHookURL            The URL of the WebHook that is targeted
      * @param discordWebHookPayload The payload which contains the content to send
      * @return true if the request succeeded
      * @throws IOException        Thrown when any I/O operation fails
      * @throws URISyntaxException Thrown when the given #webHookURL is invalid
      */
-    public boolean sendDiscordWebHook(String webHookURL, String discordWebHookPayload) throws IOException, URISyntaxException {
+    @Throws(IOException::class, URISyntaxException::class)
+    fun sendDiscordWebHook(webHookURL: String, discordWebHookPayload: String): Boolean {
         // Send Discord WebHook
-        URL url = new URL(webHookURL);
-        int responseCode; // We default to 400, when request succeeded, this should be 204
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            HttpPost httpPost = new HttpPost(url.toURI());
-            httpPost.addHeader("User-Agent", "TeamCity Discord WebHook v1");
-            httpPost.addHeader("Accept-Language", "en-US,en;q=0.5");
-            httpPost.addHeader("Content-Type", "application/json");
-            httpPost.setEntity(new StringEntity(discordWebHookPayload, HTTP_CHARSET));
-            String httpProxyHost = System.getProperty("http.proxyHost");
-            String httpProxyPort = System.getProperty("http.proxyPort");
-            if (httpProxyHost != null && httpProxyPort.trim().length() > 0 && httpProxyPort != null) {
-                int port = Integer.parseInt(httpProxyPort);
-                HttpHost proxy = new HttpHost(httpProxyHost, port, "http");
-                RequestConfig.Builder reqConfigBuilder = RequestConfig.custom();
-                reqConfigBuilder = reqConfigBuilder.setProxy(proxy);
-                RequestConfig config = reqConfigBuilder.build();
-                httpPost.setConfig(config);
+        val url = URL(webHookURL)
+        val responseCode: Int // We default to 400, when request succeeded, this should be 204
+        HttpClients.createDefault().use { httpClient ->
+            val httpPost = HttpPost(url.toURI())
+            httpPost.addHeader("User-Agent", "TeamCity Discord WebHook v1")
+            httpPost.addHeader("Accept-Language", "en-US,en;q=0.5")
+            httpPost.addHeader("Content-Type", "application/json")
+            httpPost.setEntity(StringEntity(discordWebHookPayload, HTTP_CHARSET))
+            val httpProxyHost = System.getProperty("http.proxyHost")
+            val httpProxyPort = System.getProperty("http.proxyPort")
+            if (httpProxyHost != null && httpProxyPort.trim { it <= ' ' }.length > 0 && httpProxyPort != null) {
+                val port: Int = httpProxyPort.toInt()
+                val proxy = HttpHost(httpProxyHost, port, "http")
+                var reqConfigBuilder = RequestConfig.custom()
+                reqConfigBuilder = reqConfigBuilder.setProxy(proxy)
+                val config = reqConfigBuilder.build()
+                httpPost.setConfig(config)
             }
-            try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
-                responseCode = response.getStatusLine().getStatusCode();
+            httpClient.execute(httpPost).use { response ->
+                responseCode = response.getStatusLine().getStatusCode()
             }
         }
-        return responseCode == 204; // When request returned status 204, the request was a success
+        return responseCode == 204 // When request returned status 204, the request was a success
     }
 
     /**
-     * Serializes a {@link DiscordWebHookPayload} into a JSON string.
-     *
+     * Serializes a [DiscordWebHookPayload] into a JSON string.
+     * 
      * @param discordWebHookPayload The payload the serialize
-     * @return The JSOn string of the {@link DiscordWebHookPayload}
+     * @return The JSOn string of the [DiscordWebHookPayload]
      */
-    public String serializeDiscordWebHookPayload(DiscordWebHookPayload discordWebHookPayload) {
-        return this.GSON.toJson(discordWebHookPayload);
+    fun serializeDiscordWebHookPayload(discordWebHookPayload: DiscordWebHookPayload?): String? {
+        return this.gSON.toJson(discordWebHookPayload)
     }
 
-    public Gson getGSON() {
-        return GSON;
+    companion object {
+        /**
+         * The charset used for the requests
+         */
+        private val HTTP_CHARSET: String? = StandardCharsets.UTF_8.toString()
     }
 }

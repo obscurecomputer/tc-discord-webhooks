@@ -13,51 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.github.playerforcehd.tcdiscordwebhooks.discord.embeds;
+package computer.obscure.tcdiscordwebhooks.discord.embeds
 
 /**
- * A footer element for a {@link DiscordEmbed}
- *
+ * A footer element for a [DiscordEmbed]
+ * 
  * @author Pascal Zarrad
  */
-public class DiscordEmbedFooter {
-
+class DiscordEmbedFooter {
     /**
      * The text that the footer should contain
      */
-    private String text;
+    var text: String? = null
 
     /**
      * The url to the icon of the footer
      */
-    private String icon_url;
+    var icon_url: String? = null
 
-    public DiscordEmbedFooter(String text, String icon_url) {
-        this.text = text;
-        this.icon_url = icon_url;
+    constructor(text: String?, icon_url: String?) {
+        this.text = text
+        this.icon_url = icon_url
     }
 
-    public DiscordEmbedFooter() {
-    }
+    constructor()
 
-    public DiscordEmbedFooter(String text) {
-        this.text = text;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public String getIcon_url() {
-        return icon_url;
-    }
-
-    public void setIcon_url(String icon_url) {
-        this.icon_url = icon_url;
+    constructor(text: String?) {
+        this.text = text
     }
 }

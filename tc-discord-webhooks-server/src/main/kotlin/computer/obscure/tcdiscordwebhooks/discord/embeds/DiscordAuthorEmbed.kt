@@ -13,70 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.github.playerforcehd.tcdiscordwebhooks.discord.embeds;
+package computer.obscure.tcdiscordwebhooks.discord.embeds
 
 /**
- * An element to set the author of an {@link DiscordEmbed}.
- *
+ * An element to set the author of an [DiscordEmbed].
+ * 
  * @author Pascal Zarrad
  */
-public class DiscordAuthorEmbed {
-
+class DiscordAuthorEmbed {
     /**
      * The name of the author
      */
-    private String name;
+    var name: String? = null
 
     /**
      * The url of the author
      */
-    private String url;
+    var url: String? = null
 
     /**
      * The url to the icon of the author
      */
-    private String icon_url;
+    var icon_url: String? = null
 
-    public DiscordAuthorEmbed(String name, String url, String icon_url) {
-        this.name = name;
-        this.url = url;
-        this.icon_url = icon_url;
+    constructor(name: String?, url: String?, icon_url: String?) {
+        this.name = name
+        this.url = url
+        this.icon_url = icon_url
     }
 
-    public DiscordAuthorEmbed(String name, String url) {
-        this.name = name;
-        this.url = url;
+    constructor(name: String?, url: String?) {
+        this.name = name
+        this.url = url
     }
 
-    public DiscordAuthorEmbed(String name) {
-        this.name = name;
+    constructor(name: String?) {
+        this.name = name
     }
 
-    public DiscordAuthorEmbed() {
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getIcon_url() {
-        return icon_url;
-    }
-
-    public void setIcon_url(String icon_url) {
-        this.icon_url = icon_url;
-    }
+    constructor()
 }
